@@ -71,26 +71,30 @@ def deformAroundPointAtAnAngleTransformation(point, theta, deform_factor):
                                  deform_along_y_axis, 
                                  rotate_back_around_origin, relocate_to_original_position])
 
-def rotateAlongYAxisTransformation(matrix_x_coeff):
-    matrix = np.array([[1, 0, 0], 
+# imagine an observer is at point (0, 0, d) in 3d on z-axis 
+# observing a rectangle on the x-y plane centered on origin
+# now, rotate the rectangle around the y-axis and project it back onto
+# the x-y plane to get the perspective projection formula below
+def rotateAlongYAxisTransformation(theta, observer_distance):
+    matrix = np.array([[np.cos(theta), 0, 0], 
                         [0, 1, 0], 
-                        [matrix_x_coeff, 0, 1]])
+                        [np.sin(theta) / observer_distance, 0, 1]])
     return Transformation(matrix)
 
-def rotateAlongYAxisAroundPointTransformation(point, matrix_x_coeff):
+def rotateAlongYAxisAroundPointTransformation(point, theta, observer_distance):
     recenter_around_origin = translationTransformation(*[-v for v in point])
-    rotate_along_y_axis = rotateAlongYAxisTransformation(matrix_x_coeff)
+    rotate_along_y_axis = rotateAlongYAxisTransformation(theta, observer_distance)
     relocate_to_original_position = translationTransformation(*point)
     return chainTransformations([recenter_around_origin, rotate_along_y_axis, relocate_to_original_position])
 
-def rotateAlongXAxisTransformation(matrix_y_coeff):
+def rotateAlongXAxisTransformation(theta, observer_distance):
     matrix = np.array([[1, 0, 0], 
-                        [0, 1, 0], 
-                        [0, matrix_y_coeff, 1]])
+                        [0, np.cos(theta), 0], 
+                        [0, np.sin(theta) / observer_distance, 1]])
     return Transformation(matrix)
 
-def rotateAlongXAxisAroundPointTransformation(point, matrix_y_coeff):
+def rotateAlongXAxisAroundPointTransformation(point, theta, observer_distance):
     recenter_around_origin = translationTransformation(*[-v for v in point])
-    rotate_along_x_axis = rotateAlongXAxisTransformation(matrix_y_coeff)
+    rotate_along_x_axis = rotateAlongXAxisTransformation(theta, observer_distance)
     relocate_to_original_position = translationTransformation(*point)
     return chainTransformations([recenter_around_origin, rotate_along_x_axis, relocate_to_original_position])

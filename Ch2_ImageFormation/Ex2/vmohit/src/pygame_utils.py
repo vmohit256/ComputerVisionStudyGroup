@@ -1,7 +1,9 @@
 import pygame
 
 COLORS = {
-    "red": (255, 0, 0)
+    "red": (255, 0, 0),
+    "yellow": (200, 200, 0),
+    "black": (0, 0, 0)
 }
 
 # this class holds the context defining the pygame screen like height, width, etc.
